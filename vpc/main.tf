@@ -6,7 +6,6 @@ resource "aws_vpc" "main" {
     tags = {
        Name = "main"
      }
-  
 }
 
 resource "aws_subnet" "public" {
@@ -16,7 +15,6 @@ resource "aws_subnet" "public" {
     tags = {
       Name = "public"
     }
-  
 }
 
 resource "aws_internet_gateway" "igw"{
@@ -52,7 +50,6 @@ resource "aws_route_table" "privatert" {
   tags = {
     Name = "privatert"
    }
-
 }
 
 resource "aws_route_table_association" "pri_association" {
