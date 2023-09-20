@@ -92,5 +92,5 @@ resource "aws_security_group" "mynewsg" {
 }
 resource "aws_key_pair" "test" {
   key_name = "test"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCC2+cDkLufREMB5ubHaVCasabEG23J9KZOMxZcVfLNluKQMRv89fSoFEu+U7KKgZGbRF/vfxn2j37NiAN1giqz08X7F/wWDDBmJyciFClYRYTwNAlcPWqTXWQUe+5o7h9CfLSghoR0A/nFHJ8mmDtxXegE1OW/GMm72VkCZ3c7/Gn6VWJD47uM6Di/xlYOMMoH4JG7vTlb+NQHzMOmH3nyoGF0peIqIdvByzPal7ucLXlZOwin74IKfg0UotUtZW+omggzimZu4BfavQsb6SEP4OMPmVUGxfTnehF5RPevNFEYWp3V2GjUru8WqHfIW9OhrZXEuWdZq0b5Fhx7oJ8f"
+  public_key = "Place here Publickey"
 }
