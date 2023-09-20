@@ -1,19 +1,20 @@
 resource "aws_vpc" "main" {
-    cidr_block = "10.0.0.0/16"
+    cidr_block = var.vpc_cidr
     instance_tenancy = "default"
-    enable_dns_support = "true"
-    enable_dns_hostnames = "true"
+    enable_dns_support = var.dnssupport
+    enable_dns_hostnames = var.dnshostnames
     tags = {
        Name = "main"
      }
   
 }
 
-resource "aws_subnet" "public_subnet" {
+resource "aws_subnet" "public" {
     vpc_id = aws_vpc.main.id
-    cidr_block = "10.0.0.0/24"
+    cidr_block = var.public_subnet_cidr
+    map_public_ip_on_launch = "true"
     tags = {
-        Name = public_subnet
+      Name = "public"
     }
   
 }
@@ -31,8 +32,68 @@ resource "aws_route_table" "publicrt" {
     tags = {
         Name = "Publicrt"
     }
+}
 
-    resource "aws_route_table_association" "pub_association" {
-    subnet_id = aws_subnet.public_subnet.id
-    route_table_id = aws_route_table.publicrt.id
+resource "aws_route_table_association" "pub_association" {
+    subnet_id = aws_subnet.public.id
+    route_table_id = aws_route_table.publicrt.id  
+}
+
+resource "aws_subnet" "private" {
+    vpc_id = aws_vpc.main.id
+    cidr_block = var.private_subnet_cidr
+    tags = {
+        Name = "private"
+    }
+} 
+
+resource "aws_route_table" "privatert" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "privatert"
+   }
+
+}
+
+resource "aws_route_table_association" "pri_association" {
+  subnet_id = aws_subnet.private.id
+  route_table_id = aws_route_table.privatert.id
+}
+
+resource "aws_security_group" "mynewsg" {
+  name = "mynewsg"
+  description = "allow ssh http https traffic"
+  vpc_id = aws_vpc.main.id
+
+  ingress {
+    description = "ssh traffic"
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+ ingress {
+   description = "http traffic"
+   from_port = 80
+   to_port = 80
+   protocol = "tcp"
+   cidr_blocks = ["0.0.0.0/0"]
+ }
+ ingress { 
+   description = "https traffic"
+   from_port = 443
+   to_port = 443
+   protocol = "tcp"
+   cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+   }
+}
+resource "aws_key_pair" "test" {
+  key_name = "test"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCC2+cDkLufREMB5ubHaVCasabEG23J9KZOMxZcVfLNluKQMRv89fSoFEu+U7KKgZGbRF/vfxn2j37NiAN1giqz08X7F/wWDDBmJyciFClYRYTwNAlcPWqTXWQUe+5o7h9CfLSghoR0A/nFHJ8mmDtxXegE1OW/GMm72VkCZ3c7/Gn6VWJD47uM6Di/xlYOMMoH4JG7vTlb+NQHzMOmH3nyoGF0peIqIdvByzPal7ucLXlZOwin74IKfg0UotUtZW+omggzimZu4BfavQsb6SEP4OMPmVUGxfTnehF5RPevNFEYWp3V2GjUru8WqHfIW9OhrZXEuWdZq0b5Fhx7oJ8f"
 }
